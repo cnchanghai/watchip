@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Collections.Specialized;
 using System.Text;
+using System.Diagnostics;
 namespace watchip
 {
     public partial class Form1 : Form
@@ -114,5 +115,28 @@ namespace watchip
 
     }
 
+        private void button3_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process p = new System.Diagnostics.Process();
+            //要执行的程序名称，cmd  
+            p.StartInfo.FileName = "cmd.exe";
+            p.StartInfo.UseShellExecute = false;
+            //可能接受来自调用程序的输入信息  
+            p.StartInfo.RedirectStandardInput = true;
+            //由调用程序获取输出信息  
+            p.StartInfo.RedirectStandardOutput = true;
+            //不显示程序窗口  
+            p.StartInfo.CreateNoWindow = true;
+            p.Start();//启动程序  
+            //向CMD窗口发送输入信息：  
+            p.StandardInput.WriteLine("net use s: /delete");
+            //不过不要忘记加上Exit，不然程序会异常退出  
+            p.StandardInput.WriteLine("exit");
+            p.Close();
+            p.Start();//启动程序  
+            p.StandardInput.WriteLine("net use s: \\\\10.65.1.68\\asenfileshare");
+            p.StandardInput.WriteLine("exit");
+            p.Close();
+        }
     }
 }
